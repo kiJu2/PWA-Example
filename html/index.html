@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+ 
+    </head>
+    <body>
+        <button id ="click">Click me!</button>
+        <div id = "zone" style ="width:500px;word-break: break-all;"></div>
+    </body>
+    <script>
+        var textfile = [];
+        window.onload = () =>{
+            // 초기 페이지 생성 시 이벤트
+            const fileUrl = [
+                '/text/1.txt',
+                '/text/2.txt',
+                '/text/3.txt'
+            ];
+ 
+            fileUrl.forEach(element => {
+                fetch(element)
+                    .then(r => r.text())
+                    .then(t => textfile.push(t))
+            });
+        }
+ 
+        var app = {
+            // ES6
+            text: '',
+            textArea: document.getElementById('zone')
+        };
+ 
+        app.showText = function(text){
+            // 사용하지 않아도 됨.
+            this.textArea.innerHTML = '';
+            this.text += text;
+ 
+            this.textArea.innerHTML = this.text;
+        }
+ 
+ 
+        document.getElementById('click').onclick = function(){
+            // 클릭 시, 텍스트 하나씩 추가
+            console.log("Click");
+ 
+            var node = document.createElement('h');
+            var text = '';
+            textfile.forEach(element => {
+                text += element;
+            });
+            var textnode = document.createTextNode(text);
+            node.appendChild(textnode);
+            app.textArea.appendChild(node);
+        }
+ 
+        if('serviceWorker' in navigator){
+            navigator.serviceWorker.register('../js/service-worker.js').then(() =>{
+                console.log('service worker registered');
+            });
+        }
+        
+    </script>
+</html>
